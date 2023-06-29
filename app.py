@@ -53,19 +53,20 @@ app.layout = html.Div([dcc.Location(id="url"), side, main])
     Output(component_id="page-content", component_property="children"),
     # Output(component_id="table chart", component_property="figure"),
     # Output(component_id="donut chart", component_property="figure"),
-    Output(component_id="line chart", component_property="figure"),
+    # Output(component_id="line chart", component_property="figure"),
     # Output(component_id="bar chart", component_property="figure"),
     # Output(component_id="trading log", component_property="figure"),
     [
         Input("url", "pathname"),
-        Input("ticker", "value"),
+        # Input("ticker", "value"),
     ],
 )
-def render_page_content(pathname, ticker):
+# def render_page_content(pathname, ticker):
+def render_page_content(pathname):
     if pathname == "/":
         return layout_home(table, donut, bar)
     if pathname == "/stock-list":
-        line = line_chart(date=date_list, data=stock_data)
+        # line = line_chart(date=date_list, data=stock_data)
         return layout_list(line)
     elif pathname == "/auto-trading-log":
         return layout_log(log_table)
