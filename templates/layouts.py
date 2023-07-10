@@ -1,7 +1,72 @@
-from dash import dcc, html
 import dash_bootstrap_components as dbc
+from dash import dcc, html
 
-from .styles.main_styles import SIDEBAR_STYLE
+from .styles.main_styles import CONTENT_STYLE, SIDEBAR_STYLE
+
+
+def layout_home(table, donut, bar, line, log_table):
+    return html.Div(
+        [
+            html.Div(
+                [
+                    html.H4("Current Account"),
+                    html.Div(
+                        [
+                            dbc.Row(
+                                [
+                                    dbc.Col(
+                                        [
+                                            dcc.Graph(id="table chart", figure=table),
+                                        ],
+                                        width=5,
+                                    ),
+                                    dbc.Col(
+                                        [
+                                            dcc.Graph(id="donut chart", figure=donut),
+                                        ],
+                                        width=5,
+                                    ),
+                                ]
+                            )
+                        ]
+                    ),
+                ],
+                id="info_container",
+                className="row_container_display",
+            ),
+            html.Div(
+                [
+                    html.H4("Rate of return"),
+                    dcc.Graph(id="bar chart", figure=bar),
+                ],
+                id="rate_of_return",
+                className="pretty_container",
+            ),
+            html.Div(
+                [
+                    html.H4("Stock forecast"),
+                    dcc.Dropdown(
+                        id="ticker",
+                        options=[
+                            {"label": "{}".format(i), "value": i}
+                            for i in ["Samsung", "SK", "LG"]
+                        ],
+                        value=[10, 15, 10, 15, 10],
+                        clearable=False,
+                    ),
+                    dcc.Graph(id="line chart", figure=line),
+                ],
+            ),
+            html.Div(
+                [
+                    html.H4("Trading log"),
+                    dbc.Row(dcc.Graph(id="trading log", figure=log_table)),
+                ]
+            ),
+        ],
+        id="main_container",
+        style=CONTENT_STYLE,
+    )
 
 
 def build_side():
@@ -39,79 +104,3 @@ def build_side():
         style=SIDEBAR_STYLE,
     )
     return side
-
-
-def layout_home(table, donut, bar):
-    return html.Div(
-        [
-            dbc.Container(
-                [
-                    dbc.Row(
-                        [
-                            html.H4("Rate of return"),
-                            dbc.Row(
-                                dcc.Graph(id="bar chart", figure=bar), align="center"
-                            ),
-                        ],
-                    ),
-                    dbc.Row(
-                        [
-                            html.H4("Current Account"),
-                            dbc.Col(
-                                dcc.Graph(id="table chart", figure=table),
-                                align="center",
-                            ),
-                            dbc.Col(
-                                dcc.Graph(id="donut chart", figure=donut),
-                                align="center",
-                            ),
-                        ],
-                        # style={"marginBottom": "-5%"},
-                    ),
-                ]
-            ),
-        ]
-    )
-
-
-def layout_list(line):
-    return html.Div(
-        [
-            dbc.Container(
-                [
-                    dbc.Row(
-                        [
-                            html.H4("Stock forecast"),
-                            dcc.Dropdown(
-                                id="ticker",
-                                options=[
-                                    {"label": "{}".format(i), "value": i}
-                                    for i in ["Samsung", "SK", "LG"]
-                                ],
-                                value=[10, 15, 10, 15, 10],
-                                clearable=False,
-                            ),
-                            dcc.Graph(id="line chart", figure=line),
-                        ],
-                    ),
-                ]
-            ),
-        ]
-    )
-
-
-def layout_log(log_table):
-    return html.Div(
-        [
-            dbc.Container(
-                [
-                    dbc.Row(
-                        [
-                            html.H4("Trading log"),
-                            dbc.Row(dcc.Graph(id="trading log", figure=log_table)),
-                        ]
-                    )
-                ]
-            )
-        ]
-    )

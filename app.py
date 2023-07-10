@@ -1,19 +1,11 @@
-import flask
 import dash
 import dash_bootstrap_components as dbc
-from dash import Dash, html, dcc, dash_table, Input, Output
-
 import pandas as pd
+from dash import Dash, Input, Output, dash_table, dcc, html
 
-from templates.layouts import build_side, layout_home, layout_list, layout_log
-from templates.graphs import (
-    table_chart,
-    donut_chart,
-    line_chart,
-    bar_chart,
-    log_table_chart,
-)
-from templates.styles.main_styles import CONTENT_STYLE
+from templates.graphs import (bar_chart, donut_chart, line_chart,
+                              log_table_chart, table_chart)
+from templates.layouts import layout_home
 
 # define app
 app = Dash(
@@ -42,43 +34,40 @@ line = line_chart(date=date_list, data=stock_data)
 bar = bar_chart(date=date_list, data=ratio)
 log_table = log_table_chart(head=head, values=account)
 
-side = build_side()
-main = html.Div(id="page-content", style=CONTENT_STYLE)
+# side = build_side()
+# main = html.Div(id="page-content", style=CONTENT_STYLE)
+main = layout_home(table, donut, bar, line, log_table)
 
 # layout
-app.layout = html.Div([dcc.Location(id="url"), side, main])
+# app.layout = html.Div([dcc.Location(id="url"), main])
+app.layout = main
 
 
-@app.callback(
-    Output(component_id="page-content", component_property="children"),
-    # Output(component_id="table chart", component_property="figure"),
-    # Output(component_id="donut chart", component_property="figure"),
-    # Output(component_id="line chart", component_property="figure"),
-    # Output(component_id="bar chart", component_property="figure"),
-    # Output(component_id="trading log", component_property="figure"),
-    [
-        Input("url", "pathname"),
-        # Input("ticker", "value"),
-    ],
-)
+# @app.callback(
+#     Output(component_id="page-content", component_property="children"),
+#     # Output(component_id="table chart", component_property="figure"),
+#     # Output(component_id="donut chart", component_property="figure"),
+#     # Output(component_id="line chart", component_property="figure"),
+#     # Output(component_id="bar chart", component_property="figure"),
+#     # Output(component_id="trading log", component_property="figure"),
+#     [
+#         # Input("url", "pathname"),
+#         # Input("ticker", "value"),
+#     ],
+# )
 # def render_page_content(pathname, ticker):
-def render_page_content(pathname):
-    if pathname == "/":
-        return layout_home(table, donut, bar)
-    if pathname == "/stock-list":
-        # line = line_chart(date=date_list, data=stock_data)
-        return layout_list(line)
-    elif pathname == "/auto-trading-log":
-        return layout_log(log_table)
+# def render_page_content(pathname):
+#     if pathname == "/":
+#         return layout_home(table, donut, bar, line, log_table)
 
-    # If the user tries to reach a different page, return a 404 message!
-    return html.Div(
-        [
-            html.H1("404: Not found", className="text-danger"),
-            html.Hr(),
-            html.P(f"The pathname {pathname} was not recognised..."),
-        ],
-    )
+#     # If the user tries to reach a different page, return a 404 message!
+#     return html.Div(
+#         [
+#             html.H1("404: Not found", className="text-danger"),
+#             html.Hr(),
+#             html.P(f"The pathname {pathname} was not recognised..."),
+#         ],
+#     )
 
 
 if __name__ == "__main__":
